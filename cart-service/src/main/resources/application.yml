@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: "cart-service"
+  data:
+    mongodb:
+      database: cart-service
+      port: 27018
+      uri: mongodb://localhost:27017
+
+server:
+  port: 8082
