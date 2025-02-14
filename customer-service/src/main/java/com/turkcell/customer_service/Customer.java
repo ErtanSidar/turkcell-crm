@@ -16,7 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-class Customer {
+public class Customer {
 
     @Id
     @UuidGenerator

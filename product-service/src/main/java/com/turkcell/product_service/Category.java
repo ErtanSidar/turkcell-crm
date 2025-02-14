@@ -1,6 +1,6 @@
 package com.turkcell.product_service;
 
-class Category {
+public class Category {
     private Long id;
     private String name;
     private String description;

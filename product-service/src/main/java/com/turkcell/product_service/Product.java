@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-class Product {
+public class Product {
     private Long id;
     private String name;
     private String description;

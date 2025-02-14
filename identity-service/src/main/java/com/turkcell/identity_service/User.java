@@ -2,7 +2,7 @@ package com.turkcell.identity_service;
 
 import java.time.LocalDateTime;
 
-class User {
+public class User {
     private Long id;
     private String username;
     private String password;

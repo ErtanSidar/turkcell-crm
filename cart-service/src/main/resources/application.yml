@@ -6,6 +6,19 @@ spring:
       database: cart-service
       port: 27018
       uri: mongodb://localhost:27017
+  cloud:
+    stream:
+      defaultBinder: kafka
+      function:
+        definition: orderCreatedFunction
+      bindings:
+        orderCreatedFunction-in-0:
+          destination: order-topic
+          content-type: application/json
+          group: cart-group
+      kafka:
+        binder:
+          brokers: localhost:9092
 
 server:
   port: 8082
