@@ -1,13 +1,11 @@
 spring:
   application:
     name: "notification-service"
+  profiles:
+    active: "local"
+  config:
+    import: "optional:configserver:http://localhost:8071/"
 
 server:
   port: 8085
 
-eureka:
-  client:
-    service-url:
-      defaultZone: "http://localhost:8888/eureka/"
-    register-with-eureka: true
-    fetch-registry: true

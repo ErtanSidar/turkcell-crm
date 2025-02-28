@@ -1,0 +1,4 @@
+package io.github.ertansidar.event.order;
+
+public class OrderCreatedEvent {
+}

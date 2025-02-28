@@ -1,0 +1,42 @@
+@options
+@packages
+@argfile
+-encoding
+'UTF-8'
+-protected
+-source
+'21'
+-sourcepath
+'C:/Dev/training/backend/crm.microservices/common/src/main/java;C:/Dev/training/backend/crm.microservices/common/target/generated-sources/annotations'
+-author
+-bottom
+'Copyright &#169; 2025. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'C:/Dev/training/backend/crm.microservices/common/target/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'common 1.0.0 API'
+-use
+-version
+-windowtitle
+'common 1.0.0 API'
+io.github.ertansidar
+'C:/Dev/training/backend/crm.microservices/common/src/main/java/io/github/ertansidar/Main.java'
+C:\Dev\training\backend\crm.microservices\common\src\main\java = 1739552268840
+C:\Dev\training\backend\crm.microservices\common\target\generated-sources\annotations = 1739553892825
+C:\Dev\training\backend\crm.microservices\common\target\apidocs\allclasses-index.html = 1739553895963
+C:\Dev\training\backend\crm.microservices\common\target\apidocs\allpackages-index.html = 1739553895966
+C:\Dev\training\backend\crm.microservices\common\target\apidocs\element-list = 1739553895907
+C:\Dev\training\backend\crm.microservices\common\target\apidocs\help-doc.html = 1739553896006
+C:\Dev\training\backend\crm.microservices\common\target\apidocs\index-all.html = 1739553895982
+C:\Dev\training\backend\crm.microservices\common\target\apidocs\index.html = 1739553895987
+C:\Dev\training\backend\crm.microservices\common\target\apidocs\member-search-index.js = 1739553895971
+C:\Dev\training\backend\crm.microservices\common\target\apidocs\module-search-index.js = 1739553895968
+C:\Dev\training\backend\crm.microservices\common\target\apidocs\overview-tree.html = 1739553895943
+C:\Dev\training\backend\crm.microservices\common\target\apidocs\package-search-index.js = 1739553895969
+C:\Dev\training\backend\crm.microservices\common\target\apidocs\search.html = 1739553895985
+C:\Dev\training\backend\crm.microservices\common\target\apidocs\tag-search-index.js = 1739553895973
+C:\Dev\training\backend\crm.microservices\common\target\apidocs\type-search-index.js = 1739553895970

@@ -1,0 +1,4 @@
+package io.github.ertansidar.exception.type;
+
+public class BusinessException {
+}

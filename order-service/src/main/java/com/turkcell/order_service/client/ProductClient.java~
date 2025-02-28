@@ -1,0 +1,4 @@
+package com.turkcell.order_service.client;
+
+public class ProductClient {
+}

@@ -1,0 +1,4 @@
+package io.github.ertansidar.configuration;
+
+public class PipelineConfiguration {
+}

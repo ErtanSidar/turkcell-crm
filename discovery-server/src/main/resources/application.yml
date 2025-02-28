@@ -1,15 +1,10 @@
 spring:
   application:
     name: "discovery-server"
+  profiles:
+    active: "local"
+  config:
+    import: "optional:configserver:http://localhost:8071/"
 
 server:
   port: 8888
-
-eureka:
-  instance:
-    hostname: "localhost"
-  client:
-    serviceUrl:
-      defaultZone: "http://localhost:8888/eureka/"
-    register-with-eureka: false
-    fetch-registry: false

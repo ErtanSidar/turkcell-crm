@@ -1,26 +1,209 @@
 services:
-  pg-1:
-    image: postgres
-    container_name: "pg-1"
+
+  configserver:
+    image: essoft3/configserver
+    container_name: configserver
     ports:
-      - "5435:5432"
+      - "8071:8071"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8071/actuator/health" ]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 5s
+    networks:
+      - common
+
+  discovery-server:
+    image: essoft3/discovery-server
+    container_name: discovery-server
+    ports:
+      - "8888:8888"
+    environment:
+      EUREKA_CLIENT_FETCH_REGISTRY: false
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: false
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+    networks:
+      - common
+
+  gateway-server:
+    image: essoft3/gateway-server
+    container_name: gateway-server
+    ports:
+      - "8080:8080"
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://discovery-server:8888/eureka
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+    depends_on:
+      - discovery-server
+    networks:
+      - common
+
+  order-service-db:
+    image: postgres
+    container_name: "order-service-db"
+    ports:
+      - "5433:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=test
       - POSTGRES_DB=postgres
     volumes:
-      - pg1_data:/var/lib/postgresql/data
-  pg-2:
-    image: postgres
-    container_name: "pg-2"
+      - order-service-db-data:/var/lib/postgresql/data
+    networks:
+      - common
+
+  order-service:
+    image: essoft3/order-service
+    container_name: order-service
     ports:
-      - "5436:5432"
+      - "8081:8081"
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://discovery-server:8888/eureka
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://order-service-db:5432/order-service"
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+    depends_on:
+      - discovery-server
+      - order-service-db
+    networks:
+      - common
+
+  identity-service-db:
+    image: postgres
+    container_name: "identity-service-db"
+    ports:
+      - "5434:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=test
       - POSTGRES_DB=postgres
     volumes:
-      - pg2_data:/var/lib/postgresql/data
+      - identity-service-db-data:/var/lib/postgresql/data
+    networks:
+      - common
+
+  identity-service:
+    image: essoft3/identity-service
+    container_name: identity-service
+    ports:
+      - "8084:8084"
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://discovery-server:8888/eureka
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://identity-service-db:5432/identity-service"
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+    depends_on:
+      - discovery-server
+      - identity-service-db
+    networks:
+      - common
+
+  product-service-db:
+    image: mongo
+    container_name: "product-service-db"
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - product-service-db-data:/data/db
+    networks:
+      - common
+
+  product-service:
+    image: essoft3/product-service
+    container_name: product-service
+    ports:
+      - "8083:8083"
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://discovery-server:8888/eureka
+      SPRING_DATA_MONGODB_URI: "mongodb://product-service-db:27017/product-service"
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+    depends_on:
+      - discovery-server
+      - product-service-db
+    networks:
+      - common
+
+  cart-service-db:
+    image: mongo
+    container_name: "cart-service-db"
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - cart-service-db-data:/data/db
+    networks:
+      - common
+
+  cart-service:
+    image: essoft3/cart-service
+    container_name: cart-service
+    ports:
+      - "8082:8082"
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://discovery-server:8888/eureka
+      SPRING_DATA_MONGODB_URI: "mongodb://cart-service-db:27017/cart-service"
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+    depends_on:
+      - discovery-server
+      - cart-service-db
+    networks:
+      - common
+
+  customer-service-db:
+    image: mysql:latest
+    container_name: customer-service-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: customer-service
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: test
+    ports:
+      - "3306:3306"
+    volumes:
+      - customer-service-db-data:/var/lib/mysql
+    networks:
+      - common
+
+  customer-service:
+    image: essoft3/customer-service
+    container_name: customer-service
+    ports:
+      - "8086:8086"
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://discovery-server:8888/eureka
+      SPRING_DATASOURCE_URL: "jdbc:mysql://customer-service-db:3306/customer-service"
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+    depends_on:
+      - discovery-server
+      - customer-service-db
+    networks:
+      - common
+
+  notification-service:
+    image: essoft3/notification-service
+    container_name: notification-service
+    ports:
+      - "8085:8085"
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://discovery-server:8888/eureka
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+    depends_on:
+      - discovery-server
+    networks:
+      - common
+
   kafka:
     image: bitnami/kafka
     ports:
@@ -39,6 +222,14 @@ services:
       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
       - BITNAMI_DEBUG=yes
       - KAFKA_CFG_NUM_PARTITIONS=2
+
 volumes:
-  pg1_data:
-  pg2_data:
+  order-service-db-data:
+  identity-service-db-data:
+  product-service-db-data:
+  cart-service-db-data:
+  customer-service-db-data:
+
+networks:
+  common:
+    driver: bridge
